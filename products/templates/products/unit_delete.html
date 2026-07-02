@@ -1,0 +1,43 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Delete Unit{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body text-center">
+
+        <h3>Delete Unit</h3>
+
+        <p class="mt-3">
+
+            Are you sure you want to delete
+
+            <strong>{{ object.name }}</strong>?
+
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+
+                Delete
+
+            </button>
+
+            <a href="{% url 'products:unit_list' %}" class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

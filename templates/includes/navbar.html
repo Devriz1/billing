@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-4">
+
+    <div class="container-fluid">
+
+        <button class="btn btn-light me-3" id="sidebarToggle">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
+        <h4 class="mb-0 fw-bold">
+            {% block page_title %}Dashboard{% endblock %}
+        </h4>
+
+        <div class="ms-auto d-flex align-items-center">
+
+            <div class="dropdown">
+
+                <button class="btn btn-light dropdown-toggle"
+                        data-bs-toggle="dropdown">
+
+                    <i class="bi bi-person-circle"></i>
+
+                    {{ request.user.username }}
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            My Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item text-danger"
+                           href="{% url 'accounts:logout' %}">
+                            Logout
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

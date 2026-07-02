@@ -1,0 +1,48 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Delete Category{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body text-center">
+
+        <h3 class="text-danger">
+
+            Delete Category
+
+        </h3>
+
+        <p class="mt-4">
+
+            Are you sure you want to delete
+
+            <strong>{{ object.name }}</strong> ?
+
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+
+                Delete
+
+            </button>
+
+            <a href="{% url 'products:category_list' %}"
+               class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

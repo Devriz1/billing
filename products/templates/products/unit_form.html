@@ -1,0 +1,49 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Unit{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <h4>
+
+            {% if object %}
+                Edit Unit
+            {% else %}
+                Add Unit
+            {% endif %}
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="btn btn-primary">
+
+                Save
+
+            </button>
+
+            <a href="{% url 'products:unit_list' %}" class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

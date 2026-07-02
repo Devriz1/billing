@@ -1,0 +1,42 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Delete Purchase{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body text-center">
+
+        <h4>
+
+            Delete Purchase
+
+            <strong>{{ object.invoice_number }}</strong> ?
+
+        </h4>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+
+                Yes, Delete
+
+            </button>
+
+            <a href="{% url 'purchases:list' %}"
+               class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

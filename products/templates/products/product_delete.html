@@ -1,0 +1,41 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body text-center">
+
+        <h3 class="mb-3">
+            Delete Product
+        </h3>
+
+        <p>
+
+            Are you sure you want to delete
+
+            <strong>{{ product.name }}</strong> ?
+
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button class="btn btn-danger">
+                Delete
+            </button>
+
+            <a href="{% url 'products:list' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
