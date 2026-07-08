@@ -1,7 +1,7 @@
 {% extends "layouts/app.html" %}
 {% load static %}
 
-{% block title %}Purchase Entry{% endblock %}
+{% block title %}Sales Entry{% endblock %}
 
 {% block content %}
 
@@ -15,9 +15,9 @@
 
                 <h4 class="mb-0">
 
-                    <i class="bi bi-cart-plus"></i>
+                    <i class="bi bi-receipt"></i>
 
-                    Purchase Entry
+                    Sales Entry
 
                 </h4>
 
@@ -38,12 +38,12 @@
 
         <div class="card-body">
 
-            <form id="purchase-form" method="post">
+            <form id="sale-form" method="post">
 
                 {% csrf_token %}
 
                 <!-- ====================================== -->
-                <!-- Purchase Header -->
+                <!-- Sales Header -->
                 <!-- ====================================== -->
 
                 <div class="row g-3">
@@ -64,11 +64,11 @@
 
                         <label class="form-label">
 
-                            Supplier
+                            Customer
 
                         </label>
 
-                        {{ form.supplier }}
+                        {{ form.customer }}
 
                     </div>
 
@@ -76,11 +76,11 @@
 
                         <label class="form-label">
 
-                            Purchase Date
+                            Sale Date
 
                         </label>
 
-                        {{ form.purchase_date }}
+                        {{ form.sale_date }}
 
                     </div>
 
@@ -113,74 +113,46 @@
                 <hr>
 
                 <!-- ====================================== -->
-                <!-- Purchase Items -->
+                <!-- Sales Items -->
                 <!-- ====================================== -->
 
                 <div class="table-responsive">
 
                     <table
                         class="table table-bordered table-hover align-middle table-sm"
-                        id="purchase-table">
+                        id="sale-table">
 
                         <thead class="table-dark">
 
                             <tr>
 
-                                <th style="width:60px;">
-                                    #
-                                </th>
+                                <th style="width:60px;">#</th>
 
-                                <th style="width:120px;">
-                                    Barcode
-                                </th>
+                                <th style="width:120px;">Barcode</th>
 
-                                <th style="min-width:260px;">
-                                    Product
-                                </th>
+                                <th style="min-width:250px;">Product</th>
 
-                                <th style="width:90px;">
-                                    Unit
-                                </th>
+                                <th style="width:90px;">Unit</th>
 
-                                <th style="width:90px;">
-                                    Qty
-                                </th>
+                                <th style="width:90px;">Qty</th>
 
-                                <th style="width:120px;">
-                                    P.Rate
-                                </th>
+                                <th style="width:120px;">S.Rate</th>
 
-                                <th style="width:120px;">
-                                    Amount
-                                </th>
+                                <th style="width:90px;">GST %</th>
 
-                                <th style="width:90px;">
-                                    GST %
-                                </th>
+                                <th style="width:120px;">GST Amt</th>
 
-                                <th style="width:120px;">
-                                    GST Amt
-                                </th>
+                                <th style="width:120px;">Total</th>
 
-                                <th style="width:120px;">
-                                    S.Rate
-                                </th>
-
-                                <th style="width:120px;">
-                                    Total
-                                </th>
-
-                                <th style="width:70px;">
-                                    Action
-                                </th>
+                                <th style="width:70px;">Action</th>
 
                             </tr>
 
                         </thead>
 
-                        <tbody id="purchase-body">
+                        <tbody id="sale-body">
 
-                        <!-- purchase.js will generate rows here -->
+                            <!-- sale.js generates rows -->
 
                         </tbody>
 
@@ -220,7 +192,7 @@
 
                                 <div class="col-md-4">
 
-                                    <strong>F4</strong> - New Supplier
+                                    <strong>F4</strong> - New Customer
 
                                 </div>
 
@@ -239,7 +211,9 @@
                                 <tr>
 
                                     <th style="width:50%;">
+
                                         Subtotal
+
                                     </th>
 
                                     <td class="text-end">
@@ -266,7 +240,7 @@
                                     <td class="text-end">
 
                                         ₹
-                                        <span id="discount">
+                                        <span id="discount-total">
 
                                             0.00
 
@@ -327,7 +301,8 @@
                 </div>
 
                 <hr>
-                                <!-- ====================================== -->
+
+                <!-- ====================================== -->
                 <!-- Action Buttons -->
                 <!-- ====================================== -->
 
@@ -345,7 +320,7 @@
                     </button>
 
                     <a
-                        href="{% url 'purchases:list' %}"
+                        href="{% url 'sales:list' %}"
                         class="btn btn-secondary">
 
                         <i class="bi bi-x-circle"></i>
@@ -355,12 +330,13 @@
                     </a>
 
                     <button
-                        type="submit"
+                        type="button"
+                        id="save-sale"
                         class="btn btn-success">
 
                         <i class="bi bi-check-circle"></i>
 
-                        Save Purchase
+                        Save Sale
 
                     </button>
 
@@ -378,6 +354,6 @@
 
 {% block js %}
 
-<script src="{% static 'purchases/js/purchase.js' %}"></script>
+<script src="{% static 'sales/js/sale.js' %}"></script>
 
 {% endblock %}

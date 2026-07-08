@@ -1,0 +1,369 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+
+{% block title %}Customer{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h4 class="mb-0">
+
+            <i class="bi bi-people"></i>
+
+            Customer Master
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <!-- ============================ -->
+            <!-- Basic Information -->
+            <!-- ============================ -->
+
+            <h5 class="mb-3">
+
+                Basic Information
+
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Customer Code
+
+                    </label>
+
+                    {{ form.customer_code }}
+
+                </div>
+
+                <div class="col-md-5 mb-3">
+
+                    <label class="form-label">
+
+                        Customer Name
+
+                    </label>
+
+                    {{ form.name }}
+
+                </div>
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+
+                        Customer Type
+
+                    </label>
+
+                    {{ form.customer_type }}
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Mobile
+
+                    </label>
+
+                    {{ form.mobile }}
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        WhatsApp
+
+                    </label>
+
+                    {{ form.whatsapp }}
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Email
+
+                    </label>
+
+                    {{ form.email }}
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label class="form-label">
+
+                        Contact Person
+
+                    </label>
+
+                    {{ form.contact_person }}
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- ============================ -->
+            <!-- Tax Information -->
+            <!-- ============================ -->
+
+            <h5 class="mb-3">
+
+                Tax Information
+
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+
+                        GST Number
+
+                    </label>
+
+                    {{ form.gstin }}
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+
+                        PAN Number
+
+                    </label>
+
+                    {{ form.pan_number }}
+
+                </div>
+
+            </div>
+
+            <hr>
+            <!-- ============================ -->
+<!-- Address Information -->
+<!-- ============================ -->
+
+<h5 class="mb-3">
+
+    Address Information
+
+</h5>
+
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Address Line 1
+
+        </label>
+
+        {{ form.address1 }}
+
+    </div>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Address Line 2
+
+        </label>
+
+        {{ form.address2 }}
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <label class="form-label">
+
+            City
+
+        </label>
+
+        {{ form.city }}
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <label class="form-label">
+
+            State
+
+        </label>
+
+        {{ form.state }}
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <label class="form-label">
+
+            Country
+
+        </label>
+
+        {{ form.country }}
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <label class="form-label">
+
+            Pincode
+
+        </label>
+
+        {{ form.pincode }}
+
+    </div>
+
+</div>
+
+<hr>
+
+<!-- ============================ -->
+<!-- Financial Information -->
+<!-- ============================ -->
+
+<h5 class="mb-3">
+
+    Financial Information
+
+</h5>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+
+            Opening Balance
+
+        </label>
+
+        {{ form.opening_balance }}
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+
+            Credit Limit
+
+        </label>
+
+        {{ form.credit_limit }}
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+
+            Payment Terms (Days)
+
+        </label>
+
+        {{ form.payment_terms }}
+
+    </div>
+
+</div>
+
+<hr>
+
+<!-- ============================ -->
+<!-- Notes -->
+<!-- ============================ -->
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        Notes
+
+    </label>
+
+    {{ form.notes }}
+
+</div>
+
+<div class="form-check mb-4">
+
+    {{ form.is_active }}
+
+    <label class="form-check-label">
+
+        Active Customer
+
+    </label>
+
+</div>
+
+<div class="d-flex gap-2">
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        <i class="bi bi-check-circle"></i>
+
+        Save Customer
+
+    </button>
+
+    <a
+        href="{% url 'customers:list' %}"
+        class="btn btn-secondary">
+
+        Cancel
+
+    </a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'customers/js/customer.js' %}"></script>
+
+{% endblock %}

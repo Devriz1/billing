@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Saved</title>
+</head>
+<body>
+
+<script>
+
+if (window.opener && typeof window.opener.productCreated === "function") {
+
+    window.opener.productCreated("{{ product_id }}");
+
+}
+
+window.close();
+
+</script>
+
+</body>
+</html>

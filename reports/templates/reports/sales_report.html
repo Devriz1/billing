@@ -1,0 +1,720 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+
+{% block title %}Sales Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ========================================= -->
+    <!-- Page Header -->
+    <!-- ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h3 class="mb-0">
+
+            <i class="bi bi-graph-up-arrow"></i>
+
+            Sales Report
+
+        </h3>
+
+        <div>
+
+            <button class="btn btn-success">
+
+                <i class="bi bi-file-earmark-excel"></i>
+
+                Excel
+
+            </button>
+
+            <button class="btn btn-danger">
+
+                <i class="bi bi-file-earmark-pdf"></i>
+
+                PDF
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="window.print()">
+
+                <i class="bi bi-printer"></i>
+
+                Print
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- Dashboard Cards -->
+    <!-- ========================================= -->
+
+    <div class="row mb-4">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h6>Today's Sales</h6>
+
+                    <h3>
+
+                        ₹ {{ today_sales|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm bg-success text-white">
+
+                <div class="card-body">
+
+                    <h6>This Month</h6>
+
+                    <h3>
+
+                        ₹ {{ monthly_sales|default:0 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm bg-warning text-dark">
+
+                <div class="card-body">
+
+                    <h6>Total Invoices</h6>
+
+                    <h3>
+
+                        {{ invoice_count }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card border-0 shadow-sm bg-info text-white">
+
+                <div class="card-body">
+
+                    <h6>Average Bill</h6>
+
+                    <h3>
+
+                        ₹ {{ average_bill|floatformat:2 }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- Search Filters -->
+    <!-- ========================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-light">
+
+            <strong>
+
+                Search Filters
+
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+
+                            From Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="from_date"
+                            class="form-control"
+                            value="{{ request.GET.from_date }}">
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+
+                            To Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="to_date"
+                            class="form-control"
+                            value="{{ request.GET.to_date }}">
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+
+                            Customer
+
+                        </label>
+
+                        <select
+                            name="customer"
+                            class="form-select">
+
+                            <option value="">
+
+                                All Customers
+
+                            </option>
+
+                            {% for customer in customers %}
+
+                            <option
+                                value="{{ customer.id }}"
+                                {% if request.GET.customer == customer.id|stringformat:"s" %}
+                                selected
+                                {% endif %}>
+
+                                {{ customer.customer_code }} - {{ customer.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end">
+
+                        <button
+                            class="btn btn-primary w-100">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+        <!-- ========================================= -->
+    <!-- Sales Report Table -->
+    <!-- ========================================= -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+
+            <strong>
+
+                Sales List
+
+            </strong>
+
+            <span class="badge bg-primary">
+
+                {{ sales|length }} Invoice{{ sales|length|pluralize }}
+
+            </span>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th style="width:60px;">
+
+                                #
+
+                            </th>
+
+                            <th>
+
+                                Invoice No
+
+                            </th>
+
+                            <th>
+
+                                Date
+
+                            </th>
+
+                            <th>
+
+                                Customer
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Subtotal
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Discount
+
+                            </th>
+
+                            <th class="text-end">
+
+                                GST
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Grand Total
+
+                            </th>
+
+                            <th style="width:120px;" class="text-center">
+
+                                Action
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for sale in sales %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+                            <td>
+
+                                <strong class="text-primary">
+
+                                    {{ sale.invoice_number }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {{ sale.sale_date|date:"d-m-Y" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ sale.customer.name }}
+
+                            </td>
+
+                            <td class="text-end">
+
+                                ₹ {{ sale.subtotal }}
+
+                            </td>
+
+                            <td class="text-end text-danger">
+
+                                ₹ {{ sale.discount }}
+
+                            </td>
+
+                            <td class="text-end">
+
+                                ₹ {{ sale.gst_amount }}
+
+                            </td>
+
+                            <td class="text-end fw-bold text-success">
+
+                                ₹ {{ sale.grand_total }}
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <div class="btn-group btn-group-sm">
+
+                                    <a
+                                        href="{% url 'sales:edit' sale.pk %}"
+                                        class="btn btn-outline-primary"
+                                        title="View">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-success"
+                                        onclick="window.print()"
+                                        title="Print">
+
+                                        <i class="bi bi-printer"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="9" class="text-center py-5">
+
+                                <i class="bi bi-receipt display-5 text-secondary"></i>
+
+                                <br><br>
+
+                                <strong>
+
+                                    No Sales Found
+
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- ========================================= -->
+    <!-- Report Footer -->
+    <!-- ========================================= -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-light">
+
+                    <strong>
+
+                        Report Summary
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-borderless mb-0">
+
+                        <tr>
+
+                            <th>Total Invoices</th>
+
+                            <td class="text-end">
+
+                                {{ sales|length }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Total Customers</th>
+
+                            <td class="text-end">
+
+                                {{ customers|length }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Average Bill</th>
+
+                            <td class="text-end">
+
+                                ₹ {{ average_bill|floatformat:2 }}
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+
+                        Invoice Totals
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body p-0">
+
+                    <table class="table table-bordered mb-0">
+
+                        <tbody>
+
+                            <tr>
+
+                                <th style="width:55%">
+
+                                    Subtotal
+
+                                </th>
+
+                                <td class="text-end">
+
+                                    ₹ {{ totals.subtotal|default:0|floatformat:2 }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Discount
+
+                                </th>
+
+                                <td class="text-end text-danger">
+
+                                    ₹ {{ totals.discount|default:0|floatformat:2 }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    GST
+
+                                </th>
+
+                                <td class="text-end">
+
+                                    ₹ {{ totals.gst|default:0|floatformat:2 }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr class="table-success">
+
+                                <th>
+
+                                    Grand Total
+
+                                </th>
+
+                                <th class="text-end">
+
+                                    ₹ {{ totals.grand|default:0|floatformat:2 }}
+
+                                </th>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- Pagination -->
+    <!-- ========================================= -->
+
+    {% if is_paginated %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ page_obj.previous_page_number }}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+                </span>
+
+            </li>
+
+            {% if page_obj.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ page_obj.next_page_number }}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+document.addEventListener("keydown", function(e){
+
+    if(e.key==="F2"){
+
+        e.preventDefault();
+
+        window.location.href="{% url 'sales:add' %}";
+
+    }
+
+    if(e.key==="Escape"){
+
+        e.preventDefault();
+
+        history.back();
+
+    }
+
+    if(e.ctrlKey && e.key==="p"){
+
+        e.preventDefault();
+
+        window.print();
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

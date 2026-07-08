@@ -10,6 +10,10 @@ urlpatterns = [
     path("products/",include("products.urls")),
     path("suppliers/", include("suppliers.urls")),
     path("purchases/", include("purchases.urls")),
+    path("select2/", include("django_select2.urls")),
+    path("customers/", include("customers.urls")),
+    path("sales/", include("sales.urls")),
+    path("reports/",include("reports.urls"),),
 ]
 
 if settings.DEBUG:

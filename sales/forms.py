@@ -1,20 +1,21 @@
 from django import forms
-from django.utils import timezone
-
-from .models import Purchase
+from .models import Sale
 
 
-class PurchaseForm(forms.ModelForm):
+class SaleForm(forms.ModelForm):
 
     class Meta:
-        model = Purchase
+
+        model = Sale
 
         fields = [
+
             "invoice_number",
-            "supplier",
-            "purchase_date",
+            "customer",
+            "sale_date",
             "discount",
             "remarks",
+
         ]
 
         widgets = {
@@ -24,11 +25,11 @@ class PurchaseForm(forms.ModelForm):
                 "readonly": True,
             }),
 
-            "supplier": forms.Select(attrs={
+            "customer": forms.Select(attrs={
                 "class": "form-select",
             }),
 
-            "purchase_date": forms.DateInput(attrs={
+            "sale_date": forms.DateInput(attrs={
                 "class": "form-control",
                 "type": "date",
             }),
@@ -45,11 +46,3 @@ class PurchaseForm(forms.ModelForm):
             }),
 
         }
-
-    def __init__(self, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
-
-        # Default Purchase Date
-        if not self.instance.pk:
-            self.fields["purchase_date"].initial = timezone.now().date()

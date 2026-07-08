@@ -3,10 +3,14 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
-
+from products.models import Product, Category
 from .models import Category, Unit, Product
 from .forms import CategoryForm, UnitForm, ProductForm
 
+
+# =====================================================
+# CATEGORY VIEWS
+# =====================================================
 
 class CategoryListView(ListView):
     model = Category
@@ -49,6 +53,11 @@ class CategoryDeleteView(DeleteView):
     template_name = "products/category_delete.html"
     success_url = reverse_lazy("products:category_list")
 
+
+# =====================================================
+# UNIT VIEWS
+# =====================================================
+
 class UnitListView(ListView):
     model = Unit
     template_name = "products/unit_list.html"
@@ -90,6 +99,7 @@ class UnitDeleteView(DeleteView):
     template_name = "products/unit_delete.html"
     success_url = reverse_lazy("products:unit_list")
 
+
 # =====================================================
 # PRODUCT VIEWS
 # =====================================================
@@ -113,8 +123,9 @@ def product_list(request):
         {
             "products": products,
             "search": search,
-        }
+        },
     )
+
 
 def product_create(request):
 
@@ -122,14 +133,42 @@ def product_create(request):
 
         form = ProductForm(
             request.POST,
-            request.FILES
+            request.FILES,
         )
 
         if form.is_valid():
-            form.save()
+
+            print("========== FORM IS VALID ==========")
+
+            product = form.save()
+
+            print("Product ID:", product.id)
+            print("Popup:", request.GET.get("popup"))
+
+            # Opened from Purchase Screen
+            if request.GET.get("popup") == "1":
+
+                print("========== POPUP MODE ==========")
+
+                return render(
+                    request,
+                    "products/product_popup_success.html",
+                    {
+                        "product_id": product.id,
+                    },
+                )
+
+            print("========== NORMAL MODE ==========")
+
             return redirect("products:list")
 
+        else:
+
+            print("========== FORM ERRORS ==========")
+            print(form.errors)
+
     else:
+
         form = ProductForm()
 
     return render(
@@ -140,7 +179,6 @@ def product_create(request):
             "title": "Add Product",
         },
     )
-
 
 def product_update(request, pk):
 
@@ -155,10 +193,13 @@ def product_update(request, pk):
         )
 
         if form.is_valid():
+
             form.save()
+
             return redirect("products:list")
 
     else:
+
         form = ProductForm(instance=product)
 
     return render(
@@ -176,7 +217,9 @@ def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
     if request.method == "POST":
+
         product.delete()
+
         return redirect("products:list")
 
     return render(

@@ -44,7 +44,7 @@
 
         <!-- Customers -->
         <li class="mt-3">
-            <a href="#" class="nav-link">
+            <a href="{% url 'customers:list' %}" class="nav-link">
                 <i class="bi bi-people"></i>
                 <span>Customers</span>
             </a>
@@ -68,19 +68,109 @@
 
         <!-- Sales -->
         <li>
-            <a href="#" class="nav-link">
+            <a href="{% url 'sales:list' %}" class="nav-link">
                 <i class="bi bi-receipt"></i>
                 <span>Sales</span>
             </a>
         </li>
 
         <!-- Reports -->
-        <li>
-            <a href="#" class="nav-link">
-                <i class="bi bi-bar-chart"></i>
-                <span>Reports</span>
-            </a>
-        </li>
+        <li class="nav-item">
+
+    <a
+        class="nav-link"
+        data-bs-toggle="collapse"
+        href="#reportsMenu">
+
+        <i class="bi bi-graph-up"></i>
+
+        Reports
+
+    </a>
+
+    <div
+        class="collapse"
+        id="reportsMenu">
+
+        <ul class="btn-toggle-nav list-unstyled fw-normal small">
+
+            <li>
+
+                <a
+                    href="{% url 'reports:sales' %}"
+                    class="nav-link">
+
+                    Sales Report
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a
+                    href="{% url 'reports:purchase' %}"
+                    class="nav-link">
+
+                    Purchase Report
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a
+                    href="{% url 'reports:stock' %}"
+                    class="nav-link">
+
+                    Stock Report
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a
+                    href="{% url 'reports:customer' %}"
+                    class="nav-link">
+
+                    Customer Report
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a
+                    href="{% url 'reports:supplier' %}"
+                    class="nav-link">
+
+                    Supplier Report
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a
+                    href="{% url 'reports:profit' %}"
+                    class="nav-link">
+
+                    Profit Report
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</li>
 
         <!-- Settings -->
         <li>

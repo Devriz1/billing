@@ -1,0 +1,816 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+
+{% block title %}Stock Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ====================================== -->
+    <!-- Header -->
+    <!-- ====================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h3 class="mb-0">
+
+            <i class="bi bi-box-seam"></i>
+
+            Stock Report
+
+        </h3>
+
+        <div>
+
+            <button
+                class="btn btn-success">
+
+                <i class="bi bi-file-earmark-excel"></i>
+
+                Excel
+
+            </button>
+
+            <button
+                class="btn btn-danger">
+
+                <i class="bi bi-file-earmark-pdf"></i>
+
+                PDF
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="window.print()">
+
+                <i class="bi bi-printer"></i>
+
+                Print
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ====================================== -->
+    <!-- Dashboard Cards -->
+    <!-- ====================================== -->
+
+    <div class="row mb-4">
+
+        <div class="col-lg-3">
+
+            <div class="card shadow border-0 bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h6>Total Products</h6>
+
+                    <h2>
+
+                        {{ total_products }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow border-0 bg-warning">
+
+                <div class="card-body">
+
+                    <h6>Low Stock</h6>
+
+                    <h2>
+
+                        {{ low_stock }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow border-0 bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h6>Out of Stock</h6>
+
+                    <h2>
+
+                        {{ out_stock }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="card shadow border-0 bg-success text-white">
+
+                <div class="card-body">
+
+                    <h6>Stock Value</h6>
+
+                    <h4>
+
+                        ₹ {{ stock_value|floatformat:2 }}
+
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ====================================== -->
+    <!-- Search Filters -->
+    <!-- ====================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <strong>
+
+                Search Filters
+
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <label>
+
+                            Product
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search Product..."
+                            value="{{ request.GET.search }}">
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label>
+
+                            Category
+
+                        </label>
+
+                        <select
+                            name="category"
+                            class="form-select">
+
+                            <option value="">
+
+                                All Categories
+
+                            </option>
+
+                            {% for category in categories %}
+
+                            <option
+                                value="{{ category.id }}"
+                                {% if request.GET.category == category.id|stringformat:"s" %}
+                                selected
+                                {% endif %}>
+
+                                {{ category.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label>
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option value="">
+
+                                All
+
+                            </option>
+
+                            <option value="instock">
+
+                                In Stock
+
+                            </option>
+
+                            <option value="low">
+
+                                Low Stock
+
+                            </option>
+
+                            <option value="out">
+
+                                Out of Stock
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+
+                        <label>&nbsp;</label>
+
+                        <button
+                            class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+        <!-- ====================================== -->
+    <!-- Stock Table -->
+    <!-- ====================================== -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <strong>
+
+                Current Stock
+
+            </strong>
+
+            <span class="badge bg-primary">
+
+                {{ products|length }} Products
+
+            </span>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th style="width:60px">
+
+                                #
+
+                            </th>
+
+                            <th>
+
+                                Barcode
+
+                            </th>
+
+                            <th>
+
+                                Product
+
+                            </th>
+
+                            <th>
+
+                                Category
+
+                            </th>
+
+                            <th>
+
+                                Unit
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Stock
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Purchase Price
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Selling Price
+
+                            </th>
+
+                            <th class="text-end">
+
+                                Stock Value
+
+                            </th>
+
+                            <th class="text-center">
+
+                                Status
+
+                            </th>
+
+                            <th class="text-center">
+
+                                Action
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for product in products %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+                            <td>
+
+                                {{ product.barcode }}
+
+                            </td>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ product.name }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {{ product.category.name }}
+
+                            </td>
+
+                            <td>
+
+                                {{ product.unit.short_name }}
+
+                            </td>
+
+                            <td class="text-end fw-bold">
+
+                                {{ product.current_stock }}
+
+                            </td>
+
+                            <td class="text-end">
+
+                                ₹ {{ product.purchase_price }}
+
+                            </td>
+
+                            <td class="text-end">
+
+                                ₹ {{ product.selling_price }}
+
+                            </td>
+
+                            <td class="text-end">
+
+                                ₹ {% widthratio product.current_stock 1 product.purchase_price %}
+
+                            </td>
+
+                            <td class="text-center">
+
+                                {% if product.current_stock == 0 %}
+
+                                    <span class="badge bg-danger">
+
+                                        Out of Stock
+
+                                    </span>
+
+                                {% elif product.current_stock <= 10 %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Low Stock
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-success">
+
+                                        In Stock
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <div class="btn-group btn-group-sm">
+
+                                    <a
+                                        href="{% url 'products:edit' product.pk %}"
+                                        class="btn btn-outline-primary"
+                                        title="Edit">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+                                    <a
+                                        href="{% url 'products:delete' product.pk %}"
+                                        class="btn btn-outline-danger"
+                                        title="Delete">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="11" class="text-center py-5">
+
+                                <i class="bi bi-box display-4 text-secondary"></i>
+
+                                <br><br>
+
+                                <strong>
+
+                                    No Products Found
+
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- ====================================== -->
+    <!-- Report Summary -->
+    <!-- ====================================== -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-light">
+
+                    <strong>
+
+                        Stock Summary
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-borderless mb-0">
+
+                        <tbody>
+
+                            <tr>
+
+                                <th>
+
+                                    Total Products
+
+                                </th>
+
+                                <td class="text-end">
+
+                                    {{ total_products }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Low Stock Products
+
+                                </th>
+
+                                <td class="text-end text-warning fw-bold">
+
+                                    {{ low_stock }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Out of Stock Products
+
+                                </th>
+
+                                <td class="text-end text-danger fw-bold">
+
+                                    {{ out_stock }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Total Stock Value
+
+                                </th>
+
+                                <td class="text-end fw-bold text-success">
+
+                                    ₹ {{ stock_value|floatformat:2 }}
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+
+                        Keyboard Shortcuts
+
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-borderless mb-0">
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>F2</strong>
+
+                                </td>
+
+                                <td>
+
+                                    New Product
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>Ctrl + P</strong>
+
+                                </td>
+
+                                <td>
+
+                                    Print Report
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>Esc</strong>
+
+                                </td>
+
+                                <td>
+
+                                    Back
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ====================================== -->
+    <!-- Pagination -->
+    <!-- ====================================== -->
+
+    {% if is_paginated %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ page_obj.previous_page_number }}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+
+                </span>
+
+            </li>
+
+            {% if page_obj.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ page_obj.next_page_number }}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+document.addEventListener("keydown", function(e){
+
+    // F2 = New Product
+
+    if(e.key === "F2"){
+
+        e.preventDefault();
+
+        window.location.href = "{% url 'products:add' %}";
+
+    }
+
+    // Ctrl + P = Print
+
+    if(e.ctrlKey && e.key === "p"){
+
+        e.preventDefault();
+
+        window.print();
+
+    }
+
+    // ESC = Back
+
+    if(e.key === "Escape"){
+
+        history.back();
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
