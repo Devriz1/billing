@@ -69,7 +69,7 @@
 
                     <h3>
 
-                        ₹ {{ today_sales|default:0 }}
+                        ₹ {{ today_sales|default:0|floatformat:2 }}
 
                     </h3>
 
@@ -89,7 +89,7 @@
 
                     <h3>
 
-                        ₹ {{ monthly_sales|default:0 }}
+                        ₹ {{ monthly_sales|default:0|floatformat:2 }}
 
                     </h3>
 

@@ -6,9 +6,13 @@ Products
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header mb-4">
 
-    <h2>Products</h2>
+    <div class="d-flex justify-content-between align-items-center">
+
+        <h2 class="mb-0">
+            Products
+        </h2>
 
     <a href="{% url 'products:add' %}" class="btn btn-primary">
 
@@ -18,6 +22,7 @@ Products
 
     </a>
 
+</div>
 </div>
 
 <div class="card">

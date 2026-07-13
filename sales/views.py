@@ -355,11 +355,8 @@ def save_sale(request):
 # =====================================================
 
 class SaleUpdateView(
-
     SuccessMessageMixin,
-
     UpdateView
-
 ):
 
     model = Sale
@@ -369,12 +366,31 @@ class SaleUpdateView(
     template_name = "sales/sale_form.html"
 
     success_url = reverse_lazy(
-
         "sales:list"
-
     )
 
     success_message = "Sale Updated Successfully."
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        sale = self.object
+
+        context["sale_items"] = [
+            {
+                "product": item.product.id,
+                "product_name": item.product.name,
+                "barcode": item.barcode,
+                "unit": item.unit,
+                "qty": float(item.quantity),
+                "selling_price": float(item.selling_price),
+                "gst": float(item.gst_percentage),
+            }
+            for item in sale.items.all()
+        ]
+
+        return context
 
 
 # =====================================================

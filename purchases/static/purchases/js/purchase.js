@@ -55,7 +55,43 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await loadProducts();
 
-    addRow();
+    const itemsScript =
+        document.getElementById("purchase-items");
+
+    let existingItems = [];
+
+    if (itemsScript && itemsScript.textContent.trim()) {
+
+        try {
+
+            existingItems = JSON.parse(
+                itemsScript.textContent
+            );
+
+        } catch (err) {
+
+            console.error(
+                "Failed to parse purchase items:",
+                err
+            );
+
+        }
+
+    }
+
+    if (existingItems.length > 0) {
+
+        existingItems.forEach(function (item) {
+
+            addRow(item);
+
+        });
+
+    } else {
+
+        addRow();
+
+    }
 
     document
         .getElementById("add-row")
@@ -126,7 +162,7 @@ ${gst.text}
 // ADD PURCHASE ROW
 // ======================================================
 
-function addRow() {
+function addRow(item = null) {
 
     const tbody = document.getElementById(
         "purchase-body"
@@ -270,6 +306,90 @@ class="btn btn-danger remove">
     tbody.appendChild(tr);
 
     rowNo++;
+
+    if (item) {
+
+        try {
+
+            const row = tbody.lastElementChild;
+
+            if (!row)
+                return;
+
+            const productSelect =
+                row.querySelector(".product");
+
+            const productId = String(item.product);
+
+            const existingOption =
+                productSelect.querySelector(
+                    `option[value="${productId}"]`
+                );
+
+            if (!existingOption) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = productId;
+
+                option.textContent = item.barcode
+                    ? `${item.barcode} - ${item.product_name || "Product"}`
+                    : `${item.product_name || "Product"}`;
+
+                productSelect.appendChild(option);
+
+            }
+
+            productSelect.value = productId;
+
+            row.querySelector(".barcode").value =
+                item.barcode || "";
+
+            row.querySelector(".unit").value =
+                item.unit || "";
+
+            row.querySelector(".qty").value =
+                item.qty;
+
+            row.querySelector(".purchase-price").value =
+                Number(item.purchase_price).toFixed(2);
+
+            row.querySelector(".selling-price").value =
+                Number(item.selling_price).toFixed(2);
+
+            const gstSelect =
+                row.querySelector(".gst");
+
+            const gstValue = Number(item.gst);
+
+            if (
+                GST_OPTIONS.some(function (g) {
+
+                    return Number(g.value) === gstValue;
+
+                })
+            ) {
+
+                gstSelect.value = gstValue;
+
+            }
+
+            calculateRow(row);
+
+            console.log("Loaded purchase item:", item);
+
+        } catch (rowErr) {
+
+            console.error(
+                "Failed to load purchase item:",
+                rowErr,
+                item
+            );
+
+        }
+
+    }
 
 }
 

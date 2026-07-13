@@ -136,6 +136,28 @@ class ProductForm(forms.ModelForm):
             }),
         }
 
+    def clean_name(self):
+
+        name = self.cleaned_data.get("name")
+
+        if name:
+
+            name = name.strip()
+
+            qs = Product.objects.filter(name__iexact=name)
+
+            if self.instance and self.instance.pk:
+
+                qs = qs.exclude(pk=self.instance.pk)
+
+            if qs.exists():
+
+                raise forms.ValidationError(
+                    "A product with this name already exists."
+                )
+
+        return name
+
     def clean(self):
         cleaned_data = super().clean()
 

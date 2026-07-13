@@ -188,7 +188,27 @@ class PurchaseUpdateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("purchases:list")
     success_message = "Purchase updated successfully."
 
+    def get_context_data(self, **kwargs):
 
+        context = super().get_context_data(**kwargs)
+
+        purchase = self.object
+
+        context["purchase_items"] = [
+            {
+                "product": item.product.id,
+                "product_name": item.product.name,
+                "barcode": item.barcode,
+                "unit": item.unit,
+                "qty": float(item.quantity),
+                "purchase_price": float(item.purchase_price),
+                "selling_price": float(item.selling_price),
+                "gst": float(item.gst_percentage),
+            }
+            for item in purchase.items.all()
+        ]
+
+        return context
 # ===========================================================
 # DELETE
 # ===========================================================

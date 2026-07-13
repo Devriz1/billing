@@ -22,16 +22,63 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     console.log("Easy Bill Sales Loaded");
 
-    await loadProducts();
-    await loadCustomers();
+    try {
 
-    loadCustomerDropdown();
+        await loadProducts();
 
-    addRow();
+        await loadCustomers();
 
-    // Add Product Button
-    document.getElementById("add-row")
-        .addEventListener("click", addRow);
+        loadCustomerDropdown();
+
+        const saleItemsScript =
+            document.getElementById("sale-items");
+
+        if (saleItemsScript && saleItemsScript.textContent.trim()) {
+
+            try {
+
+                const existingItems = JSON.parse(
+                    saleItemsScript.textContent
+                );
+
+                if (existingItems.length > 0) {
+
+                    existingItems.forEach(item => {
+
+                        addRow(item);
+
+                    });
+
+                } else {
+
+                    addRow();
+
+                }
+
+            } catch (parseErr) {
+
+                console.error("Failed to parse sale items:", parseErr);
+
+                addRow();
+
+            }
+
+        } else {
+
+            addRow();
+
+        }
+
+        document.getElementById("add-row")
+            .addEventListener("click", addRow);
+
+    } catch (err) {
+
+        console.error("Sales page initialization failed:", err);
+
+        alert("Unable to initialize sales page. Please refresh.");
+
+    }
 
 });
 
@@ -167,7 +214,7 @@ function productOptions() {
 // ADD ROW
 // ======================================================
 
-function addRow() {
+function addRow(item = null) {
 
     const tbody = document.getElementById("sale-body");
 
@@ -280,6 +327,100 @@ function addRow() {
     `;
 
     tbody.appendChild(tr);
+
+    if (item) {
+
+        try {
+
+            const row = tbody.lastElementChild;
+
+            if (!row) return;
+
+            const productSelect =
+                row.querySelector(".product");
+
+            const productId = String(item.product);
+
+            const existingOption =
+                productSelect.querySelector(
+                    `option[value="${productId}"]`
+                );
+
+            if (!existingOption) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = productId;
+
+                option.textContent = item.barcode
+                    ? `${item.barcode} - ${item.product_name || "Product"}`
+                    : `${item.product_name || "Product"}`;
+
+                productSelect.appendChild(option);
+
+            }
+
+            productSelect.value = productId;
+
+            const barcodeField =
+                row.querySelector(".barcode");
+
+            if (barcodeField) {
+
+                barcodeField.value = item.barcode || "";
+
+            }
+
+            const unitField =
+                row.querySelector(".unit");
+
+            if (unitField) {
+
+                unitField.value = item.unit || "";
+
+            }
+
+            const qtyField =
+                row.querySelector(".qty");
+
+            if (qtyField) {
+
+                qtyField.value = item.qty;
+
+            }
+
+            const priceField =
+                row.querySelector(".selling-price");
+
+            if (priceField) {
+
+                priceField.value =
+                    Number(item.selling_price).toFixed(2);
+
+            }
+
+            const gstField =
+                row.querySelector(".gst");
+
+            if (gstField) {
+
+                gstField.value =
+                    Number(item.gst);
+
+            }
+
+            calculateRow(row);
+
+            console.log("Loaded sale item:", item);
+
+        } catch (rowErr) {
+
+            console.error("Failed to load sale item:", rowErr, item);
+
+        }
+
+    }
 
     calculateInvoice();
 

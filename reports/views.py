@@ -1,5 +1,5 @@
 from datetime import date
-
+from django.db.models import Value
 from django.shortcuts import render
 from django.db.models import (
     Sum,
@@ -8,13 +8,16 @@ from django.db.models import (
     F,
     DecimalField,
     ExpressionWrapper,
+    Q,
 )
-
+from django.db.models import F
 from sales.models import Sale
 from purchases.models import Purchase
 from products.models import Product, Category
 from customers.models import Customer
 from suppliers.models import Supplier
+from django.db.models.functions import Coalesce
+
 
 # ==========================================================
 # SALES REPORT
@@ -133,11 +136,12 @@ def purchase_report(request):
         )
 
     totals = purchases.aggregate(
-        subtotal=Sum("subtotal"),
-        discount=Sum("discount"),
-        gst=Sum("gst_amount"),
-        grand=Sum("grand_total"),
-    )
+    subtotal=Sum("subtotal"),
+    discount=Sum("discount"),
+    gst=Sum("tax"),
+    grand=Sum("grand_total"),
+)
+
 
     context = {
 
@@ -198,18 +202,23 @@ def stock_report(request):
             category_id=category
         )
 
+
+
     if status == "instock":
+
         products = products.filter(
-            current_stock__gt=10
+            current_stock__gt=F("minimum_stock")
         )
 
     elif status == "low":
+
         products = products.filter(
             current_stock__gt=0,
-            current_stock__lte=10
+            current_stock__lte=F("minimum_stock")
         )
 
     elif status == "out":
+
         products = products.filter(
             current_stock=0
         )
@@ -231,13 +240,11 @@ def stock_report(request):
             is_active=True
         ),
 
-        "total_products": Product.objects.filter(
-            is_active=True
-        ).count(),
+        "total_products": products.count(),
 
         "low_stock": Product.objects.filter(
             current_stock__gt=0,
-            current_stock__lte=10,
+            current_stock__lte=F("minimum_stock"),
             is_active=True
         ).count(),
 
@@ -255,39 +262,214 @@ def stock_report(request):
         context
     )
 
+
+
 def customer_report(request):
 
-    customers = Customer.objects.filter(
-        is_active=True
-    ).annotate(
-        total_sales=Count("sales"),
-        amount=Sum("sales__grand_total")
+    customers = Customer.objects.annotate(
+
+    total_sales=Count(
+        "sales",
+        distinct=True
+    ),
+
+    amount=Coalesce(
+        Sum("sales__grand_total"),
+        Value(0),
+        output_field=DecimalField(max_digits=12, decimal_places=2)
+    ),
+
+    average_bill=Coalesce(
+        Avg("sales__grand_total"),
+        Value(0),
+        output_field=DecimalField(max_digits=12, decimal_places=2)
     )
 
-    return render(
-        request,
-        "reports/customer_report.html",
-        {
-            "customers": customers
-        }
+)
+
+    # ------------------------------------
+    # Filters
+    # ------------------------------------
+
+    search = request.GET.get("search")
+    phone = request.GET.get("phone")
+    status = request.GET.get("status")
+
+    if search:
+
+        customers = customers.filter(
+
+            Q(name__icontains=search) |
+            Q(email__icontains=search)
+
+        )
+
+    if phone:
+
+        customers = customers.filter(
+
+            phone__icontains=phone
+
+        )
+
+    if status == "active":
+
+        customers = customers.filter(
+
+            is_active=True
+
+        )
+
+    elif status == "inactive":
+
+        customers = customers.filter(
+
+            is_active=False
+
+        )
+
+    customers = customers.order_by("name")
+
+    # ------------------------------------
+    # Dashboard Cards
+    # ------------------------------------
+
+    total_customers = Customer.objects.count()
+
+    active_customers = Customer.objects.filter(
+        is_active=True
+    ).count()
+
+    inactive_customers = Customer.objects.filter(
+        is_active=False
+    ).count()
+
+    total_sales = Sale.objects.aggregate(
+
+    total=Coalesce(
+        Sum("grand_total"),
+        Value(0),
+        output_field=DecimalField(max_digits=12, decimal_places=2)
     )
+
+)["total"]
+
+    total_invoices = Sale.objects.count()
+
+    context = {
+
+        "customers": customers,
+
+        "total_customers": total_customers,
+
+        "active_customers": active_customers,
+
+        "inactive_customers": inactive_customers,
+
+        "total_sales": total_sales,
+
+        "total_invoices": total_invoices,
+
+    }
+
+    return render(
+
+        request,
+
+        "reports/customer_report.html",
+
+        context
+
+    )
+
+from django.db.models import Count, Sum, Avg, Q
 
 def supplier_report(request):
 
-    suppliers = Supplier.objects.filter(
-        is_active=True
-    ).annotate(
-        total_purchase=Count("purchase"),
-        amount=Sum("purchase__grand_total")
+    suppliers = Supplier.objects.annotate(
+
+        total_purchase=Count(
+            "purchases",
+            distinct=True
+        ),
+
+        purchase_amount=Sum(
+            "purchases__grand_total"
+        ),
+
+        average_purchase=Avg(
+            "purchases__grand_total"
+        )
+
     )
+
+    # -----------------------------
+    # Filters
+    # -----------------------------
+
+    search = request.GET.get("search")
+    phone = request.GET.get("phone")
+    status = request.GET.get("status")
+
+    if search:
+
+        suppliers = suppliers.filter(
+
+            Q(name__icontains=search) |
+            Q(email__icontains=search)
+
+        )
+
+    if phone:
+
+        suppliers = suppliers.filter(
+            phone__icontains=phone
+        )
+
+    if status == "active":
+
+        suppliers = suppliers.filter(
+            is_active=True
+        )
+
+    elif status == "inactive":
+
+        suppliers = suppliers.filter(
+            is_active=False
+        )
+
+    suppliers = suppliers.order_by("name")
+
+    context = {
+
+        "suppliers": suppliers,
+
+        "total_suppliers": Supplier.objects.count(),
+
+        "active_suppliers": Supplier.objects.filter(
+            is_active=True
+        ).count(),
+
+        "inactive_suppliers": Supplier.objects.filter(
+            is_active=False
+        ).count(),
+
+        "total_purchase_amount":
+            Purchase.objects.aggregate(
+                total=Sum("grand_total")
+            )["total"] or 0,
+
+        "purchase_count":
+            Purchase.objects.count(),
+
+    }
 
     return render(
         request,
         "reports/supplier_report.html",
-        {
-            "suppliers": suppliers
-        }
+        context
     )
+
 def profit_report(request):
 
     purchase_total = Purchase.objects.aggregate(

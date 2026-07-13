@@ -7,42 +7,50 @@
 
 <div class="container-fluid">
 
-    <!-- ====================================== -->
-    <!-- Header -->
-    <!-- ====================================== -->
+    <!-- ====================================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ====================================================== -->
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h3 class="mb-0">
-
-            <i class="bi bi-box-seam"></i>
-
-            Stock Report
-
-        </h3>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
 
         <div>
 
-            <button
-                class="btn btn-success">
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-box-seam-fill text-primary me-2"></i>
+
+                Stock Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Inventory status, stock valuation and product availability.
+
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2 mt-3 mt-lg-0">
+
+            <button class="btn btn-success">
 
                 <i class="bi bi-file-earmark-excel"></i>
 
-                Excel
+                Export Excel
 
             </button>
 
-            <button
-                class="btn btn-danger">
+            <button class="btn btn-danger">
 
                 <i class="bi bi-file-earmark-pdf"></i>
 
-                PDF
+                Export PDF
 
             </button>
 
             <button
-                class="btn btn-primary"
+                class="btn btn-dark"
                 onclick="window.print()">
 
                 <i class="bi bi-printer"></i>
@@ -55,25 +63,46 @@
 
     </div>
 
-    <!-- ====================================== -->
-    <!-- Dashboard Cards -->
-    <!-- ====================================== -->
+    <!-- ====================================================== -->
+    <!-- DASHBOARD CARDS -->
+    <!-- ====================================================== -->
 
-    <div class="row mb-4">
+    <div class="row g-4 mb-4">
 
-        <div class="col-lg-3">
+        <!-- Total Products -->
 
-            <div class="card shadow border-0 bg-primary text-white">
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
 
                 <div class="card-body">
 
-                    <h6>Total Products</h6>
+                    <div class="d-flex justify-content-between align-items-center">
 
-                    <h2>
+                        <div>
 
-                        {{ total_products }}
+                            <small class="text-muted">
 
-                    </h2>
+                                Total Products
+
+                            </small>
+
+                            <h2 class="fw-bold mt-2 mb-0">
+
+                                {{ total_products }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-box-seam fs-2"></i>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -81,19 +110,40 @@
 
         </div>
 
-        <div class="col-lg-3">
+        <!-- Low Stock -->
 
-            <div class="card shadow border-0 bg-warning">
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
 
                 <div class="card-body">
 
-                    <h6>Low Stock</h6>
+                    <div class="d-flex justify-content-between align-items-center">
 
-                    <h2>
+                        <div>
 
-                        {{ low_stock }}
+                            <small class="text-muted">
 
-                    </h2>
+                                Low Stock
+
+                            </small>
+
+                            <h2 class="fw-bold text-warning mt-2 mb-0">
+
+                                {{ low_stock }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-exclamation-triangle fs-2"></i>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -101,19 +151,40 @@
 
         </div>
 
-        <div class="col-lg-3">
+        <!-- Out Of Stock -->
 
-            <div class="card shadow border-0 bg-danger text-white">
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
 
                 <div class="card-body">
 
-                    <h6>Out of Stock</h6>
+                    <div class="d-flex justify-content-between align-items-center">
 
-                    <h2>
+                        <div>
 
-                        {{ out_stock }}
+                            <small class="text-muted">
 
-                    </h2>
+                                Out of Stock
+
+                            </small>
+
+                            <h2 class="fw-bold text-danger mt-2 mb-0">
+
+                                {{ out_stock }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-x-circle fs-2"></i>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -121,19 +192,40 @@
 
         </div>
 
-        <div class="col-lg-3">
+        <!-- Stock Value -->
 
-            <div class="card shadow border-0 bg-success text-white">
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card shadow-sm h-100">
 
                 <div class="card-body">
 
-                    <h6>Stock Value</h6>
+                    <div class="d-flex justify-content-between align-items-center">
 
-                    <h4>
+                        <div>
 
-                        ₹ {{ stock_value|floatformat:2 }}
+                            <small class="text-muted">
 
-                    </h4>
+                                Inventory Value
+
+                            </small>
+
+                            <h4 class="fw-bold text-success mt-2 mb-0">
+
+                                ₹ {{ stock_value|floatformat:2 }}
+
+                            </h4>
+
+                        </div>
+
+                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-cash-stack fs-2"></i>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -143,19 +235,31 @@
 
     </div>
 
-    <!-- ====================================== -->
-    <!-- Search Filters -->
-    <!-- ====================================== -->
+    <!-- ====================================================== -->
+    <!-- SEARCH FILTER -->
+    <!-- ====================================================== -->
 
     <div class="card shadow-sm mb-4">
 
         <div class="card-header">
 
-            <strong>
+            <div class="d-flex justify-content-between align-items-center">
 
-                Search Filters
+                <h5 class="mb-0">
 
-            </strong>
+                    <i class="bi bi-funnel me-2"></i>
+
+                    Search Filters
+
+                </h5>
+
+                <span class="badge bg-primary fs-6">
+
+                    {{ products|length }} Products
+
+                </span>
+
+            </div>
 
         </div>
 
@@ -163,13 +267,15 @@
 
             <form method="get">
 
-                <div class="row">
+                <div class="row g-3 align-items-end">
 
-                    <div class="col-md-4">
+                    <!-- Product -->
 
-                        <label>
+                    <div class="col-lg-4">
 
-                            Product
+                        <label class="form-label fw-semibold">
+
+                            Product Name
 
                         </label>
 
@@ -177,14 +283,16 @@
                             type="text"
                             name="search"
                             class="form-control"
-                            placeholder="Search Product..."
+                            placeholder="Search product..."
                             value="{{ request.GET.search }}">
 
                     </div>
 
-                    <div class="col-md-3">
+                    <!-- Category -->
 
-                        <label>
+                    <div class="col-lg-3">
+
+                        <label class="form-label fw-semibold">
 
                             Category
 
@@ -218,11 +326,13 @@
 
                     </div>
 
-                    <div class="col-md-3">
+                    <!-- Status -->
 
-                        <label>
+                    <div class="col-lg-3">
 
-                            Status
+                        <label class="form-label fw-semibold">
+
+                            Stock Status
 
                         </label>
 
@@ -230,25 +340,30 @@
                             name="status"
                             class="form-select">
 
-                            <option value="">
+                            <option value="">All Status</option>
 
-                                All
-
-                            </option>
-
-                            <option value="instock">
+                            <option value="instock"
+                            {% if request.GET.status == "instock" %}
+                            selected
+                            {% endif %}>
 
                                 In Stock
 
                             </option>
 
-                            <option value="low">
+                            <option value="low"
+                            {% if request.GET.status == "low" %}
+                            selected
+                            {% endif %}>
 
                                 Low Stock
 
                             </option>
 
-                            <option value="out">
+                            <option value="out"
+                            {% if request.GET.status == "out" %}
+                            selected
+                            {% endif %}>
 
                                 Out of Stock
 
@@ -258,18 +373,31 @@
 
                     </div>
 
-                    <div class="col-md-2 d-grid">
+                    <!-- Buttons -->
 
-                        <label>&nbsp;</label>
+                    <div class="col-lg-2">
 
-                        <button
-                            class="btn btn-primary">
+                        <div class="d-grid gap-2">
 
-                            <i class="bi bi-search"></i>
+                            <button class="btn btn-primary">
 
-                            Search
+                                <i class="bi bi-search"></i>
 
-                        </button>
+                                Search
+
+                            </button>
+
+                            <a
+                                href="{% url 'reports:stock' %}"
+                                class="btn btn-outline-secondary">
+
+                                <i class="bi bi-arrow-clockwise"></i>
+
+                                Reset
+
+                            </a>
+
+                        </div>
 
                     </div>
 
@@ -280,19 +408,22 @@
         </div>
 
     </div>
-        <!-- ====================================== -->
-    <!-- Stock Table -->
-    <!-- ====================================== -->
 
-    <div class="card shadow-sm">
+    <!-- ====================================================== -->
+    <!-- CURRENT STOCK -->
+    <!-- ====================================================== -->
+
+    <div class="card shadow-sm mb-4">
 
         <div class="card-header d-flex justify-content-between align-items-center">
 
-            <strong>
+            <h5 class="mb-0">
+
+                <i class="bi bi-table me-2"></i>
 
                 Current Stock
 
-            </strong>
+            </h5>
 
             <span class="badge bg-primary">
 
@@ -304,79 +435,31 @@
 
         <div class="card-body p-0">
 
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height:650px; overflow:auto;">
 
-                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+                <table class="table table-hover align-middle mb-0">
 
                     <thead class="table-dark">
 
                         <tr>
 
-                            <th style="width:60px">
+                            <th style="width:70px;">#</th>
 
-                                #
+                            <th>Product</th>
 
-                            </th>
+                            <th>Category</th>
 
-                            <th>
+                            <th>Unit</th>
 
-                                Barcode
+                            <th class="text-end">Stock</th>
 
-                            </th>
+                            <th class="text-end">Purchase Price</th>
 
-                            <th>
+                            <th class="text-end">Selling Price</th>
 
-                                Product
+                            <th class="text-end">Stock Value</th>
 
-                            </th>
-
-                            <th>
-
-                                Category
-
-                            </th>
-
-                            <th>
-
-                                Unit
-
-                            </th>
-
-                            <th class="text-end">
-
-                                Stock
-
-                            </th>
-
-                            <th class="text-end">
-
-                                Purchase Price
-
-                            </th>
-
-                            <th class="text-end">
-
-                                Selling Price
-
-                            </th>
-
-                            <th class="text-end">
-
-                                Stock Value
-
-                            </th>
-
-                            <th class="text-center">
-
-                                Status
-
-                            </th>
-
-                            <th class="text-center">
-
-                                Action
-
-                            </th>
+                            <th class="text-center">Status</th>
 
                         </tr>
 
@@ -394,21 +477,32 @@
 
                             </td>
 
-                            <td>
-
-                                {{ product.barcode }}
-
-                            </td>
+                            <!-- Product -->
 
                             <td>
 
-                                <strong>
+                                <div>
 
-                                    {{ product.name }}
+                                    <strong>
 
-                                </strong>
+                                        {{ product.name }}
+
+                                    </strong>
+
+                                    <br>
+
+                                    <small class="text-muted">
+
+                                        Barcode :
+                                        {{ product.barcode }}
+
+                                    </small>
+
+                                </div>
 
                             </td>
+
+                            <!-- Category -->
 
                             <td>
 
@@ -416,41 +510,79 @@
 
                             </td>
 
+                            <!-- Unit -->
+
                             <td>
 
                                 {{ product.unit.short_name }}
 
                             </td>
 
+                            <!-- Stock -->
+
                             <td class="text-end fw-bold">
 
-                                {{ product.current_stock }}
+                                {% if product.current_stock == 0 %}
+
+                                    <span class="text-danger">
+
+                                        {{ product.current_stock }}
+
+                                    </span>
+
+                                {% elif product.current_stock <= 10 %}
+
+                                    <span class="text-warning">
+
+                                        {{ product.current_stock }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-success">
+
+                                        {{ product.current_stock }}
+
+                                    </span>
+
+                                {% endif %}
 
                             </td>
+
+                            <!-- Purchase -->
 
                             <td class="text-end">
 
-                                ₹ {{ product.purchase_price }}
+                                ₹ {{ product.purchase_price|floatformat:2 }}
 
                             </td>
+
+                            <!-- Selling -->
 
                             <td class="text-end">
 
-                                ₹ {{ product.selling_price }}
+                                ₹ {{ product.selling_price|floatformat:2 }}
 
                             </td>
 
-                            <td class="text-end">
+                            <!-- Stock Value -->
 
-                                ₹ {% widthratio product.current_stock 1 product.purchase_price %}
+                            <td class="text-end fw-bold">
+
+                                ₹ {{ product.stock_value|floatformat:2 }}
 
                             </td>
+
+                            <!-- Status -->
 
                             <td class="text-center">
 
                                 {% if product.current_stock == 0 %}
 
                                     <span class="badge bg-danger">
+
+                                        <i class="bi bi-x-circle-fill me-1"></i>
 
                                         Out of Stock
 
@@ -460,6 +592,8 @@
 
                                     <span class="badge bg-warning text-dark">
 
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+
                                         Low Stock
 
                                     </span>
@@ -467,6 +601,8 @@
                                 {% else %}
 
                                     <span class="badge bg-success">
+
+                                        <i class="bi bi-check-circle-fill me-1"></i>
 
                                         In Stock
 
@@ -476,49 +612,27 @@
 
                             </td>
 
-                            <td class="text-center">
-
-                                <div class="btn-group btn-group-sm">
-
-                                    <a
-                                        href="{% url 'products:edit' product.pk %}"
-                                        class="btn btn-outline-primary"
-                                        title="Edit">
-
-                                        <i class="bi bi-pencil"></i>
-
-                                    </a>
-
-                                    <a
-                                        href="{% url 'products:delete' product.pk %}"
-                                        class="btn btn-outline-danger"
-                                        title="Delete">
-
-                                        <i class="bi bi-trash"></i>
-
-                                    </a>
-
-                                </div>
-
-                            </td>
-
                         </tr>
 
                         {% empty %}
 
                         <tr>
 
-                            <td colspan="11" class="text-center py-5">
+                            <td colspan="9" class="text-center py-5">
 
-                                <i class="bi bi-box display-4 text-secondary"></i>
+                                <i class="bi bi-box-seam display-4 text-secondary"></i>
 
-                                <br><br>
-
-                                <strong>
+                                <h5 class="mt-3">
 
                                     No Products Found
 
-                                </strong>
+                                </h5>
+
+                                <p class="text-muted mb-0">
+
+                                    No inventory records match your search.
+
+                                </p>
 
                             </td>
 
@@ -535,23 +649,28 @@
         </div>
 
     </div>
-        <!-- ====================================== -->
-    <!-- Report Summary -->
-    <!-- ====================================== -->
 
-    <div class="row mt-4">
+    <!-- ====================================================== -->
+    <!-- REPORT SUMMARY -->
+    <!-- ====================================================== -->
 
-        <div class="col-lg-6">
+    <div class="row g-4">
 
-            <div class="card shadow-sm">
+        <!-- Summary -->
 
-                <div class="card-header bg-light">
+        <div class="col-lg-6 d-flex">
 
-                    <strong>
+            <div class="card shadow-sm flex-fill">
 
-                        Stock Summary
+                <div class="card-header">
 
-                    </strong>
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-clipboard-data me-2"></i>
+
+                        Report Summary
+
+                    </h5>
 
                 </div>
 
@@ -563,13 +682,9 @@
 
                             <tr>
 
-                                <th>
+                                <th>Total Products</th>
 
-                                    Total Products
-
-                                </th>
-
-                                <td class="text-end">
+                                <td class="text-end fw-bold">
 
                                     {{ total_products }}
 
@@ -579,11 +694,7 @@
 
                             <tr>
 
-                                <th>
-
-                                    Low Stock Products
-
-                                </th>
+                                <th>Low Stock Items</th>
 
                                 <td class="text-end text-warning fw-bold">
 
@@ -595,11 +706,7 @@
 
                             <tr>
 
-                                <th>
-
-                                    Out of Stock Products
-
-                                </th>
+                                <th>Out Of Stock</th>
 
                                 <td class="text-end text-danger fw-bold">
 
@@ -611,13 +718,9 @@
 
                             <tr>
 
-                                <th>
+                                <th>Total Inventory Value</th>
 
-                                    Total Stock Value
-
-                                </th>
-
-                                <td class="text-end fw-bold text-success">
+                                <td class="text-end text-success fw-bold">
 
                                     ₹ {{ stock_value|floatformat:2 }}
 
@@ -635,17 +738,21 @@
 
         </div>
 
-        <div class="col-lg-6">
+        <!-- Report Information -->
 
-            <div class="card shadow-sm">
+        <div class="col-lg-6 d-flex">
 
-                <div class="card-header bg-success text-white">
+            <div class="card shadow-sm flex-fill">
 
-                    <strong>
+                <div class="card-header bg-primary text-white">
 
-                        Keyboard Shortcuts
+                    <h5 class="mb-0">
 
-                    </strong>
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        Report Information
+
+                    </h5>
 
                 </div>
 
@@ -657,31 +764,15 @@
 
                             <tr>
 
-                                <td>
+                                <th width="170">
 
-                                    <strong>F2</strong>
+                                    Generated On
 
-                                </td>
-
-                                <td>
-
-                                    New Product
-
-                                </td>
-
-                            </tr>
-
-                            <tr>
+                                </th>
 
                                 <td>
 
-                                    <strong>Ctrl + P</strong>
-
-                                </td>
-
-                                <td>
-
-                                    Print Report
+                                    {% now "d M Y" %}
 
                                 </td>
 
@@ -689,15 +780,47 @@
 
                             <tr>
 
+                                <th>
+
+                                    Generated Time
+
+                                </th>
+
                                 <td>
 
-                                    <strong>Esc</strong>
+                                    {% now "h:i A" %}
 
                                 </td>
 
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Generated By
+
+                                </th>
+
                                 <td>
 
-                                    Back
+                                    {{ request.user.username }}
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>
+
+                                    Report Type
+
+                                </th>
+
+                                <td>
+
+                                    Stock Inventory Report
 
                                 </td>
 
@@ -715,9 +838,9 @@
 
     </div>
 
-    <!-- ====================================== -->
-    <!-- Pagination -->
-    <!-- ====================================== -->
+    <!-- ====================================================== -->
+    <!-- PAGINATION -->
+    <!-- ====================================================== -->
 
     {% if is_paginated %}
 
@@ -729,8 +852,11 @@
 
             <li class="page-item">
 
-                <a class="page-link"
-                   href="?page={{ page_obj.previous_page_number }}">
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}">
+
+                    <i class="bi bi-chevron-left"></i>
 
                     Previous
 
@@ -744,7 +870,11 @@
 
                 <span class="page-link">
 
-                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    {{ page_obj.number }}
+
+                    /
+
+                    {{ page_obj.paginator.num_pages }}
 
                 </span>
 
@@ -754,10 +884,13 @@
 
             <li class="page-item">
 
-                <a class="page-link"
-                   href="?page={{ page_obj.next_page_number }}">
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number }}">
 
                     Next
+
+                    <i class="bi bi-chevron-right"></i>
 
                 </a>
 
@@ -781,19 +914,9 @@
 
 document.addEventListener("keydown", function(e){
 
-    // F2 = New Product
+    /* Print */
 
-    if(e.key === "F2"){
-
-        e.preventDefault();
-
-        window.location.href = "{% url 'products:add' %}";
-
-    }
-
-    // Ctrl + P = Print
-
-    if(e.ctrlKey && e.key === "p"){
+    if(e.ctrlKey && e.key.toLowerCase()=="p"){
 
         e.preventDefault();
 
@@ -801,9 +924,17 @@ document.addEventListener("keydown", function(e){
 
     }
 
-    // ESC = Back
+    /* Refresh */
 
-    if(e.key === "Escape"){
+    if(e.key==="F5"){
+
+        return;
+
+    }
+
+    /* Escape */
+
+    if(e.key==="Escape"){
 
         history.back();
 
@@ -812,5 +943,54 @@ document.addEventListener("keydown", function(e){
 });
 
 </script>
+
+<style>
+
+@media print{
+
+    #sidebar,
+    .navbar,
+    .btn,
+    form,
+    .pagination,
+    footer{
+
+        display:none !important;
+
+    }
+
+    #mainContent{
+
+        margin-left:0 !important;
+
+        width:100%;
+
+    }
+
+    body{
+
+        background:#fff;
+
+    }
+
+    .card{
+
+        border:1px solid #ddd !important;
+
+        box-shadow:none !important;
+
+        break-inside:avoid;
+
+    }
+
+    .table{
+
+        font-size:12px;
+
+    }
+
+}
+
+</style>
 
 {% endblock %}

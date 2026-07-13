@@ -1,4 +1,3 @@
-```html
 {% extends "layouts/app.html" %}
 
 {% block title %}Customers{% endblock %}
@@ -10,7 +9,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
 
         <h4 class="mb-0">
-            <i class="bi bi-people-fill"></i>
+            <i class="bi bi-people-fill fs-5"></i>
             Customer Master
         </h4>
 
@@ -60,7 +59,7 @@
 
         <div class="table-responsive">
 
-            <table class="table table-bordered table-hover align-middle">
+            <table class="table table-hover align-middle table-custom">
 
                 <thead class="table-dark">
 
@@ -98,7 +97,7 @@
 
                         <td>
 
-                            {{ customer.name }}
+                            <strong>{{ customer.name }}</strong>
 
                         </td>
 
@@ -144,21 +143,27 @@
 
                         <td class="text-center">
 
-                            <a
-                                href="{% url 'customers:edit' customer.id %}"
-                                class="btn btn-warning btn-sm">
+                            <div class="d-flex gap-1 justify-content-center">
 
-                                <i class="bi bi-pencil-square"></i>
+                                <a
+                                    href="{% url 'customers:edit' customer.id %}"
+                                    class="btn btn-warning btn-action"
+                                    title="Edit">
 
-                            </a>
+                                    <i class="bi bi-pencil-square"></i>
 
-                            <a
-                                href="{% url 'customers:delete' customer.id %}"
-                                class="btn btn-danger btn-sm">
+                                </a>
 
-                                <i class="bi bi-trash"></i>
+                                <a
+                                    href="{% url 'customers:delete' customer.id %}"
+                                    class="btn btn-danger btn-action"
+                                    title="Delete">
 
-                            </a>
+                                    <i class="bi bi-trash"></i>
+
+                                </a>
+
+                            </div>
 
                         </td>
 

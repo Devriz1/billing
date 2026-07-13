@@ -23,15 +23,13 @@
 
 <body>
 
-<div class="d-flex">
-
     {% include 'includes/sidebar.html' %}
 
-    <div class="flex-grow-1">
+    <div id="mainContent" class="flex-grow-1">
 
         {% include 'includes/navbar.html' %}
 
-        <main class="p-4">
+        <main class="container-fluid py-4 px-4">
 
             <!-- Django Messages -->
             {% if messages %}
@@ -69,7 +67,6 @@
 
 {% block js %}{% endblock %}
 
-<script src="{% static 'purchases/js/purchase.js' %}"></script>
 </body>
 
 </html>
